@@ -8,3 +8,9 @@ Build a historical weather app using microservices and deploy to Google Cloud Pl
 
 ## Process
 
+### Setup
+
+_Note: Usually each of subfolders in the repository would be separate repositories_
+
+* For local development, [Docker Compose](https://docs.docker.com/compose/) was used to simulate a cloud based environment.
+
