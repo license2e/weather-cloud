@@ -50,6 +50,8 @@ class Weather(ResourceBase):
             where = json.loads(where_param)
 
             mongo_db = current_app.data.driver.db
+            # TODO: select by time attribute
+            # TODO: kick off a job to fill in the rest of the api data for the last two weeks
             weather_item = mongo_db[self.COLLECTION].find_one({
                 'coordinates': where['coordinates']})
 
