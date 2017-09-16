@@ -15,6 +15,7 @@ class Weather(ResourceBase):
     COLLECTION = 'weather'
     WEATHER_API = "https://api.darksky.net/forecast/{}/{},{}?exclude={}"
     EXCLUDE = 'hourly,minutely,currently,flags,alerts'
+    API_TOKEN = current_app.config['API_TOKEN']
 
     resource = {
         'schema': {
@@ -46,19 +47,15 @@ class Weather(ResourceBase):
         where_param = request.args.get('where')
         if where_param != '':
             where = json.loads(where_param)
-            # print("{}".format(where['coordinates']))
 
             mongo_db = current_app.data.driver.db
             weather_item = mongo_db[self.COLLECTION].find_one({
                 'coordinates': where['coordinates']})
 
-            # print("{}".format(weather_item))
-
             if weather_item is None:
                 request_time = str(datetime.datetime.now().isoformat()).split('.')[0]
-                api_url = self.WEATHER_API.format("034c83c7d53baff2f137e5f3374aa126",
-                                                  where['coordinates'], request_time,
-                                                  self.EXCLUDE)
+                api_url = self.WEATHER_API.format(self.API_TOKEN, where['coordinates'],
+                                                  request_time, self.EXCLUDE)
                 r = requests.get(api_url)
                 res = r.json()
 

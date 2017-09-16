@@ -2,6 +2,7 @@ import os
 import sys
 import traceback
 
+from distutils.util import strtobool
 from eve import Eve
 
 from weather.resources import DOMAIN
@@ -16,6 +17,8 @@ def app_init():
     SETTINGS['MONGO_URI'] = os.environ.get('MONGO_URI')
     SETTINGS['PORT'] = int(os.environ.get('PORT'))
     SETTINGS['DOMAIN'] = DOMAIN
+    SETTINGS['API_TOKEN'] = os.environ.get('API_TOKEN', '')
+    SETTINGS['DEBUG'] = strtobool(os.environ.get('DEBUG', 'false'))
 
     app = Eve(settings=SETTINGS)
 
@@ -36,7 +39,7 @@ def main_http():
         traceback.print_exc(file=sys.stdout)
         raise
 
-    print('Starting app...')
+    print('Starting weather app...')
     app.run(
         host=app.config.get('HOST', '0.0.0.0'),
         port=app.config.get('PORT', 8000),

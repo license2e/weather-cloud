@@ -12,6 +12,8 @@ services:
     environment:
       - MONGO_URI=mongodb://mongo/weather
       - PORT=8000
+      - API_TOKEN=034c83c7d53baff2f137e5f3374aa126
+      - DEBUG=true
 #  ui:
 #    build: ./ui
 #    command: npm start
