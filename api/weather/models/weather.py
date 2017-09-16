@@ -1,3 +1,4 @@
+import arrow
 import json
 import datetime
 import requests
@@ -15,7 +16,6 @@ class Weather(ResourceBase):
     COLLECTION = 'weather'
     WEATHER_API = "https://api.darksky.net/forecast/{}/{},{}?exclude={}"
     EXCLUDE = 'hourly,minutely,currently,flags,alerts'
-    API_TOKEN = current_app.config['API_TOKEN']
 
     resource = {
         'schema': {
@@ -42,10 +42,11 @@ class Weather(ResourceBase):
         """
         This hook runs before the weather GET to fire off the request to the Weather API
         """
+        API_TOKEN = current_app.config['API_TOKEN']
 
         # print("{} {}".format(request.args.get('where'), lookup))
         where_param = request.args.get('where')
-        if where_param != '':
+        if where_param != '' and where_param is not None:
             where = json.loads(where_param)
 
             mongo_db = current_app.data.driver.db
@@ -54,14 +55,17 @@ class Weather(ResourceBase):
 
             if weather_item is None:
                 request_time = str(datetime.datetime.now().isoformat()).split('.')[0]
-                api_url = self.WEATHER_API.format(self.API_TOKEN, where['coordinates'],
+                api_url = self.WEATHER_API.format(API_TOKEN, where['coordinates'],
                                                   request_time, self.EXCLUDE)
                 r = requests.get(api_url)
                 res = r.json()
 
+                now = arrow.utcnow()
                 new_weather_item = {
                     'coordinates': where['coordinates'],
                     'time': res.get('daily').get('data')[0]['time'],
-                    'result': res
+                    'result': res,
+                    '_created': now.datetime,
+                    '_updated': now.datetime
                 }
                 mongo_db[self.COLLECTION].insert(new_weather_item)
