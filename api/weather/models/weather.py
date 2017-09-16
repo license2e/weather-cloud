@@ -42,9 +42,9 @@ class Weather(ResourceBase):
         """
         This hook runs before the weather GET to fire off the request to the Weather API
         """
-        API_TOKEN = current_app.config['API_TOKEN']
+        API_TOKEN = current_app.config.get('API_TOKEN')
 
-        # print("{} {}".format(request.args.get('where'), lookup))
+        # print("{} {} {}".format(request.args.get('where'), lookup, current_app.config))
         where_param = request.args.get('where')
         if where_param != '' and where_param is not None:
             where = json.loads(where_param)
@@ -59,6 +59,7 @@ class Weather(ResourceBase):
                 request_time = str(datetime.datetime.now().isoformat()).split('.')[0]
                 api_url = self.WEATHER_API.format(API_TOKEN, where['coordinates'],
                                                   request_time, self.EXCLUDE)
+                # print("{}".format(api_url))
                 r = requests.get(api_url)
                 res = r.json()
 

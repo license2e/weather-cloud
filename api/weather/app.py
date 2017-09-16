@@ -19,6 +19,8 @@ def app_init():
     SETTINGS['DOMAIN'] = DOMAIN
     SETTINGS['API_TOKEN'] = os.environ.get('API_TOKEN', '')
     SETTINGS['DEBUG'] = strtobool(os.environ.get('DEBUG', 'false'))
+    SETTINGS['X_DOMAINS'] = '*'
+    SETTINGS['X_HEADERS'] = ['Authorization', 'Content-type']
 
     app = Eve(settings=SETTINGS)
 
