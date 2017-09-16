@@ -4,6 +4,9 @@ import traceback
 
 from eve import Eve
 
+from weather.resources import DOMAIN
+from weather.models.weather import Weather
+
 
 def app_init():
     """ Initialize the app """
@@ -12,9 +15,11 @@ def app_init():
     SETTINGS = {}
     SETTINGS['MONGO_URI'] = os.environ.get('MONGO_URI')
     SETTINGS['PORT'] = int(os.environ.get('PORT'))
-    SETTINGS['DOMAIN'] = {'weather': {}}
+    SETTINGS['DOMAIN'] = DOMAIN
 
     app = Eve(settings=SETTINGS)
+
+    app.on_pre_GET_weather = Weather.pre_weather_GET
 
     return app
 
