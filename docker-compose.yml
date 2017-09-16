@@ -8,9 +8,10 @@ services:
     ports:
       - "8000:8000"
     links:
-      - redis:redis
+      - mongo:mongo
     environment:
-      - REDIS_HOST=redis
+      - MONGO_URI=mongodb://mongo/weather
+      - PORT=8000
 #  ui:
 #    build: ./ui
 #    command: npm start
@@ -18,7 +19,7 @@ services:
 #      - ./ui:/app
 #    ports:
 #      - "3000:3000"
-  redis:
-    image: redis
-    environment:
-      - DEBUG_MODE=True
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
