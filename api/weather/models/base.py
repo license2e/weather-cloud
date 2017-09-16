@@ -9,9 +9,6 @@ class ResourceBase(object):
 
     COLLECTION = None
 
-    def __init__(self, db):
-        self._db = db
-
     @classmethod
     def on_pre_GET(cls, resource_name, request, lookup):
         if JSON_MEDIA_TYPE not in request.headers.get('Content-Type', '').lower():
