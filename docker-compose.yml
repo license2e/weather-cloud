@@ -14,13 +14,13 @@ services:
       - PORT=8000
       - API_TOKEN=034c83c7d53baff2f137e5f3374aa126
       - DEBUG=true
-#  ui:
-#    build: ./ui
-#    command: npm start
-#    volumes:
-#      - ./ui:/app
-#    ports:
-#      - "3000:3000"
+  ui:
+    build: ./ui
+    command: nginx
+    volumes:
+      - ./ui:/app
+    ports:
+      - "80:4200"
   mongo:
     image: mongo
     ports:
