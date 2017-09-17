@@ -1,0 +1,37 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f ../../docker-compose.yml
+    kompose.version: 1.1.0 (36652f6)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: ui
+  name: ui
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: ui
+    spec:
+      containers:
+      - args:
+        - nginx
+        image: us.gcr.io/weather-cloud-h7rta20170916/weathercloud_ui:v3
+        name: ui
+        ports:
+        - containerPort: 80
+        resources: {}
+#        volumeMounts:
+#        - mountPath: /app
+#          name: ui-claim0
+      restartPolicy: Always
+#      volumes:
+#      - name: ui-claim0
+#        persistentVolumeClaim:
+#          claimName: ui-claim0
+status: {}

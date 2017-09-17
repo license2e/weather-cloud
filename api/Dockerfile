@@ -8,7 +8,8 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     libpython-dev \
     nginx \
-    supervisor
+    supervisor \
+    && rm -rf /var/lib/apt/lists/*
 
 # setup all the configfiles
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
