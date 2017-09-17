@@ -74,7 +74,7 @@ export class WeatherComponent {
   }
 
   displayWeather(position: string) {
-    console.log(position);
+    // console.log(position);
     this.position = position;
     this.currentProcessingDate.setHours(0);
     this.currentProcessingDate.setMinutes(0);

@@ -63,10 +63,12 @@ export class AppComponent {
   }
 
   getWeatherDisplay() {
-    try {
-      this.weatherDisplay.displayWeather(`${this.position.coords.latitude},${this.position.coords.longitude}`);
-    } catch (e) {
-      console.error(e);
+    if (this.position) {
+      try {
+        this.weatherDisplay.displayWeather(`${this.position.coords.latitude},${this.position.coords.longitude}`);
+      } catch (e) {
+        console.error(e);
+      }
     }
   }
 

@@ -21,7 +21,7 @@ spec:
       containers:
       - args:
         - nginx
-        image: us.gcr.io/weather-cloud-h7rta20170916/weathercloud_ui:v3
+        image: us.gcr.io/weather-cloud-h7rta20170916/weathercloud_ui:v4
         name: ui
         ports:
         - containerPort: 80
