@@ -34,7 +34,7 @@ spec:
         image: us.gcr.io/weather-cloud-h7rta20170916/weathercloud_api:v1
         name: api
         ports:
-        - containerPort: 8000
+        - containerPort: 80
 #        resources: {}
 #        volumeMounts:
 #        - mountPath: /app
