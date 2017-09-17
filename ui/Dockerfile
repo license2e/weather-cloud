@@ -1,15 +1,10 @@
-FROM node:7.4
+FROM node:8.5-slim
 MAINTAINER license2e
 
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-
-# Build and runtime deps
 RUN apt-get update && apt-get install -y \
     build-essential \
     git \
-    nginx \
-    yarn
+    nginx
 
 # setup all the configfiles
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
@@ -20,6 +15,7 @@ EXPOSE 80 80
 # App setup
 ADD . /app
 WORKDIR /app
+RUN npm install -g @angular/cli
 RUN yarn install
 RUN ng build --prod
 
