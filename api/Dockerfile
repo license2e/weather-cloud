@@ -20,7 +20,7 @@ COPY supervisor-app.conf /etc/supervisor/conf.d/
 ENV PYTHONUNBUFFERED 1
 ENV DEBUG_MODE False
 
-EXPOSE 8000 8000
+EXPOSE 80 80
 
 # App setup
 WORKDIR /app
