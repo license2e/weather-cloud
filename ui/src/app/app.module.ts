@@ -1,19 +1,21 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { MapService } from '../services/map.service';
 import { GeolocationService } from '../services/geolocation.service';
 import { ApiService } from '../services/api.service';
+import { WeatherComponent } from '../weather/weather.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    WeatherComponent,
   ],
   imports: [
     BrowserModule,
-    HttpModule
+    HttpClientModule
   ],
   providers: [
     MapService,

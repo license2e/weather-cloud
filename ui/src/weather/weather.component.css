@@ -1,0 +1,13 @@
+
+
+#weather-container ul {
+  max-width: 960px;
+  margin: auto;
+}
+
+#weather-container ul li {
+  display: inline-block;
+  text-align: center;
+  min-width: 80px;
+  margin: 25px;
+}

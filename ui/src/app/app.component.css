@@ -1,8 +1,29 @@
-body {
+body, p, a, ul, li {
   padding: 0;
   margin: 0;
   text-shadow: 0 0 4px #999;
+  font-family: 'Open Sans', sans-serif;
+}
+
+body {
   background-color: #eff2f2;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  padding: 0;
+  margin: 0;
+  color: #000;
+  text-shadow: 0 0 4px #999;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+p, ul {
+  padding: 0;
+  margin: 0;
+}
+
+a, a:hover, a:visited {
+  color: darkslategrey;
 }
 
 #map {
@@ -34,8 +55,29 @@ body {
   z-index: 1001;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  color: #000;
-  font-family: sans-serif;
-  text-shadow: 0 0 4px #999;
+#locations {
+  max-width: 600px;
+  margin: auto;
+}
+
+#locations li {
+  display: inline-flex;
+  text-align: center;
+  min-width: 120px;
+}
+
+#locations li:after {
+  content: '|';
+  font-size: 22px;
+}
+
+#locations li:last-child:after {
+  content: '';
+}
+
+#locations li a {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  padding: 6px 0px;
 }

@@ -1,7 +1,14 @@
 <div id="map"></div>
 <div id="map-overlay"></div>
 <div id="weather-data" style="text-align:center">
-  <h1>
-    Welcome to {{title}}!
-  </h1>
+  <h1>{{title}}</h1>
+  <p *ngIf="warning === true">{{message}}</p>
+  <ul id="locations">
+    <li *ngFor="let location of customLocations">
+      <a href="#{{location.title.replace(' ','-').toLowerCase()}}" (click)="navigate(location)">
+        {{location.title}}
+      </a>
+    </li>
+  </ul>
+  <weather></weather>
 </div>

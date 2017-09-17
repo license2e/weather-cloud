@@ -1,0 +1,11 @@
+<div id="weather-container" *ngIf="showWeather === true">
+  <ul>
+    <li *ngFor="let item of weather">
+      <h3>{{item.dateLabel}}</h3>
+      <span>H: {{item.temperatureHigh}}&deg;</span>
+      <br />
+      <span>L: {{item.temperatureLow}}&deg;</span>
+    </li>
+  </ul>
+
+</div>

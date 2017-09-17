@@ -44,19 +44,22 @@ class Weather(ResourceBase):
         """
         API_TOKEN = current_app.config.get('API_TOKEN')
 
-        # print("{} {} {}".format(request.args.get('where'), lookup, current_app.config))
+        # print("{} {}".format(request.args.get('where'), lookup))
         where_param = request.args.get('where')
         if where_param != '' and where_param is not None:
             where = json.loads(where_param)
+            # request_time = str(datetime.datetime.now().isoformat()).split('.')[0]
+            request_time = int(where['time'])
 
             mongo_db = current_app.data.driver.db
-            # TODO: select by time attribute
-            # TODO: kick off a job to fill in the rest of the api data for the last two weeks
-            weather_item = mongo_db[self.COLLECTION].find_one({
-                'coordinates': where['coordinates']})
+            search = {
+                'coordinates': where['coordinates'],
+                'time': request_time,
+            }
+            print("{}".format(search))
+            weather_item = mongo_db[self.COLLECTION].find_one(search)
 
             if weather_item is None:
-                request_time = str(datetime.datetime.now().isoformat()).split('.')[0]
                 api_url = self.WEATHER_API.format(API_TOKEN, where['coordinates'],
                                                   request_time, self.EXCLUDE)
                 # print("{}".format(api_url))

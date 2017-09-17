@@ -1,18 +1,20 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../environments/environment';
 
 @Injectable()
 export class ApiService {
-  http: Http;
+  http: HttpClient;
 
-  constructor(http: Http) {
+  constructor(http: HttpClient) {
     this.http = http;
   }
 
-  weather(coordinates: string) {
-    return this.http
-      .get(`${environment.apiUri}/weather?where={"coordinates":"${encodeURIComponent(coordinates)}"}`);
+  weather(coordinates: string, next: number) {
+    const coords = encodeURIComponent(coordinates);
+    const url = `${environment.apiUri}/weather?where={"coordinates":"${coords}","time":${(next/1000)}}`;
+
+    return this.http.get(url);
   }
 }

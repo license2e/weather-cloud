@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MapService } from '../services/map.service';
 import { GeolocationService } from '../services/geolocation.service';
-import { ApiService } from '../services/api.service';
 import { Map } from 'mapbox-gl';
+import { IPosition } from '../core/position.interface';
+import { WeatherComponent } from '../weather/weather.component';
 
 @Component({
   selector: 'app-root',
@@ -10,40 +11,81 @@ import { Map } from 'mapbox-gl';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'My First Angular App';
+  title = 'Weather';
+
+  @ViewChild(WeatherComponent)
+  private weatherDisplay: WeatherComponent;
 
   // Warning flag & message.
   warning: boolean;
   message: string;
-  position: Position;
-  repositioned: boolean;
 
-  constructor(private mapService: MapService, private geolocation: GeolocationService, private api: ApiService) {
+  position: IPosition;
+  repositioned: boolean;
+  customLocations: Array<any>;
+
+  constructor(private mapService: MapService, private geolocation: GeolocationService) {
     this.warning = false;
-    this.message = "";
+    this.message = '';
     this.repositioned = false;
+    this.customLocations = [{
+      title: 'Global HQ',
+      coords: {
+        longitude: -117.7501357,
+        latitude: 33.6527411,
+      },
+    }, {
+      title: 'Silicon Valley',
+      coords: {
+        longitude: -122.083845,
+        latitude: 37.3906728,
+      },
+    }, {
+      title: 'Copenhagen',
+      coords: {
+        longitude: 12.3740582,
+        latitude: 55.6569337,
+      },
+    }];
   }
 
-  repositionMap() {
+  private repositionMap() {
     if (this.repositioned === false && this.position) {
-      this.mapService.map.easeTo({
-        center: [this.position.coords.longitude, this.position.coords.latitude],
-        zoom: 7,
-        duration: 3500,
-        pitch: 60,
-      });
+      this.mapService.map
+        .flyTo({
+          center: [this.position.coords.longitude, this.position.coords.latitude],
+          zoom: 7,
+          speed: .5,
+          pitch: 60,
+        });
       this.repositioned = true;
     }
   }
 
-  getWeather() {
-    this.api.weather(`${this.position.coords.latitude},${this.position.coords.longitude}`)
-      .subscribe((results) => {
-        console.log(results);
-      });
+  getWeatherDisplay() {
+    try {
+      this.weatherDisplay.displayWeather(`${this.position.coords.latitude},${this.position.coords.longitude}`);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  navigate(location: any) {
+    try {
+      this.weatherDisplay.clearDisplay();
+    } catch (e) {
+      console.error(e);
+    }
+    this.repositioned = false;
+    this.position = {
+      coords: location.coords,
+    };
+    this.getWeatherDisplay();
+    this.repositionMap();
   }
 
   ngOnInit() {
+    history.replaceState({}, document.title, ".");
     let map = new Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/light-v9',
@@ -55,6 +97,7 @@ export class AppComponent {
       scrollZoom: false,
     });
     map.on('style.load', () => {
+      this.getWeatherDisplay();
       this.repositionMap();
     });
     this.mapService.map = map;
@@ -64,11 +107,21 @@ export class AppComponent {
     if (navigator.geolocation) {
       this.geolocation.getCurrentPosition()
         .forEach((position: Position) => {
-          this.position = position;
+          const newCoords = {
+            longitude: position.coords.longitude,
+            latitude: position.coords.latitude,
+          };
+          this.position = {
+            coords: newCoords,
+          };
+          this.customLocations.push({
+            title: 'My Location',
+            coords: newCoords,
+          });
         })
         .then(() => {
+          this.getWeatherDisplay();
           this.repositionMap();
-          this.getWeather();
         })
         .catch((error: PositionError) => {
           if (error.code > 0) {
@@ -87,7 +140,7 @@ export class AppComponent {
           }
         });
     } else {
-      this.message = "browser doesn't support geolocation";
+      this.message = 'browser doesn\'t support geolocation';
       this.warning = true;
     }
   }

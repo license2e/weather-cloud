@@ -16,7 +16,7 @@ services:
       - DEBUG=true
   ui:
     build: ./ui
-    command: nginx
+    command: yarn start
     volumes:
       - ./ui:/app
     ports:
