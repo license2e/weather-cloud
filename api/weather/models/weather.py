@@ -74,5 +74,4 @@ class Weather(ResourceBase):
                     '_created': now.datetime,
                     '_updated': now.datetime
                 }
-                mongo_db[self.COLLECTION].insert(new_weather_item)
-                lookup['time'] = weather_item
+                inserted_id = mongo_db[self.COLLECTION].insert(new_weather_item)

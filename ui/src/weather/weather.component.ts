@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
+import * as moment from 'moment-timezone';
+
 import { ApiService } from '../services/api.service';
+import { IPosition } from "../core/position.interface";
 
 const INITIAL_TOTAL = 14;
 
@@ -13,18 +16,18 @@ const INITIAL_TOTAL = 14;
   providers: []
 })
 export class WeatherComponent {
-  position: string;
+  position: IPosition;
   showWeather: boolean;
   weather: Array<any>;
   totalRetrieved: number;
-  currentProcessingDate: Date;
+  currentProcessingDate: any;
 
   constructor(private api: ApiService) {
-    this.position = '';
+    this.position = null;
     this.showWeather = false;
     this.weather = [];
     this.totalRetrieved = 0;
-    this.currentProcessingDate = new Date();
+    this.currentProcessingDate = null;
   }
 
   processResults(results: any) {
@@ -41,8 +44,25 @@ export class WeatherComponent {
     });
   }
 
-  getWeather(coords: string, time: number) {
+  getProcessingDate() {
     return new Promise((resolve, reject) => {
+      if (this.currentProcessingDate !== null) {
+        resolve();
+      } else {
+        this.api.tz(this.position.coords.latitude, this.position.coords.longitude)
+          .subscribe((res:any) => {
+            this.currentProcessingDate = moment().tz(res.tz).startOf('day');
+            resolve();
+          });
+      }
+    });
+  }
+
+  getWeather() {
+    return new Promise((resolve, reject) => {
+      const coords = `${this.position.coords.latitude},${this.position.coords.longitude}`;
+      const time = this.currentProcessingDate.format('X');
+      console.log(coords, time);
       this.api.weather(coords, time)
         .subscribe((results:any) => {
           this.processResults(results)
@@ -59,13 +79,9 @@ export class WeatherComponent {
 
   getLastTwoWeeks() {
     if (this.totalRetrieved < INITIAL_TOTAL) {
-      const now = this.currentProcessingDate;
-      this.currentProcessingDate.setDate(now.getDate()-1);
-      this.currentProcessingDate.setHours(0);
-      this.currentProcessingDate.setMinutes(0);
-      this.currentProcessingDate.setSeconds(0);
-      this.currentProcessingDate.setMilliseconds(0);
-      this.getWeather(this.position, this.currentProcessingDate.getTime())
+      const newDate = this.currentProcessingDate.subtract(1, 'days');
+      this.currentProcessingDate = newDate;
+      this.getWeather()
         .then(() => {
           this.totalRetrieved = this.totalRetrieved + 1;
           this.getLastTwoWeeks();
@@ -73,14 +89,13 @@ export class WeatherComponent {
     }
   }
 
-  displayWeather(position: string) {
+  displayWeather(position: IPosition) {
     // console.log(position);
     this.position = position;
-    this.currentProcessingDate.setHours(0);
-    this.currentProcessingDate.setMinutes(0);
-    this.currentProcessingDate.setSeconds(0);
-    this.currentProcessingDate.setMilliseconds(0);
-    this.getWeather(this.position, this.currentProcessingDate.getTime())
+    this.getProcessingDate()
+      .then(() => {
+        return this.getWeather();
+      })
       .then(() => {
         this.totalRetrieved = this.totalRetrieved + 1;
         this.getLastTwoWeeks();
@@ -88,10 +103,10 @@ export class WeatherComponent {
   }
 
   clearDisplay() {
-    this.position = '';
+    this.position = null;
     this.showWeather = false;
     this.weather = [];
     this.totalRetrieved = 0;
-    this.currentProcessingDate = new Date();
+    this.currentProcessingDate = null;
   }
 }

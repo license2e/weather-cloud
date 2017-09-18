@@ -11,9 +11,15 @@ export class ApiService {
     this.http = http;
   }
 
-  weather(coordinates: string, next: number) {
+  weather(coordinates: string, time: number) {
     const coords = encodeURIComponent(coordinates);
-    const url = `${environment.apiUri}/weather?where={"coordinates":"${coords}","time":${(next/1000)}}`;
+    const url = `${environment.apiUri}/weather?where={"coordinates":"${coords}","time":${time}}`;
+
+    return this.http.get(url);
+  }
+
+  tz(lat: number, lng: number) {
+    const url = `${environment.apiUri}/tz?lat=${lat}&lng=${lng}`;
 
     return this.http.get(url);
   }

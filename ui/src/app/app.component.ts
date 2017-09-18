@@ -65,7 +65,7 @@ export class AppComponent {
   getWeatherDisplay() {
     if (this.position) {
       try {
-        this.weatherDisplay.displayWeather(`${this.position.coords.latitude},${this.position.coords.longitude}`);
+        this.weatherDisplay.displayWeather(this.position);
       } catch (e) {
         console.error(e);
       }

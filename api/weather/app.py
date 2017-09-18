@@ -3,6 +3,7 @@ import sys
 import traceback
 
 from flask import jsonify, request
+from flask_cors import cross_origin
 from timezonefinder import TimezoneFinder
 from distutils.util import strtobool
 from eve import Eve
@@ -31,6 +32,7 @@ def app_init():
     app.on_pre_GET_weather = Weather.pre_weather_GET
 
     @app.route('/tz')
+    @cross_origin()
     def get_tz():
         return jsonify(tz=tf.timezone_at(lng=float(request.args['lng']), lat=float(request.args['lat'])))
 
