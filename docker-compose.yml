@@ -16,9 +16,9 @@ services:
       - DEBUG=true
   ui:
     build: ./ui
-    command: yarn start
-    volumes:
-      - ./ui:/app
+    command: nginx
+#    volumes:
+#      - ./ui:/app
     ports:
       - "4200:80"
   mongo:

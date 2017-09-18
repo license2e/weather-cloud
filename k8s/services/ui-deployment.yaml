@@ -21,10 +21,11 @@ spec:
       containers:
       - args:
         - nginx
-        image: us.gcr.io/weather-cloud-h7rta20170916/weathercloud_ui:v4
+        image: us.gcr.io/weather-cloud-h7rta20170916/weathercloud_ui:v5
         name: ui
         ports:
-        - containerPort: 80
+          - containerPort: 80
+          - containerPort: 443
         resources: {}
 #        volumeMounts:
 #        - mountPath: /app

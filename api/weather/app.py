@@ -2,11 +2,15 @@ import os
 import sys
 import traceback
 
+from flask import jsonify, request
+from timezonefinder import TimezoneFinder
 from distutils.util import strtobool
 from eve import Eve
 
 from weather.resources import DOMAIN
 from weather.models.weather import Weather
+
+tf = TimezoneFinder()
 
 
 def app_init():
@@ -25,6 +29,10 @@ def app_init():
     app = Eve(settings=SETTINGS)
 
     app.on_pre_GET_weather = Weather.pre_weather_GET
+
+    @app.route('/tz')
+    def get_tz():
+        return jsonify(tz=tf.timezone_at(lng=float(request.args['lng']), lat=float(request.args['lat'])))
 
     return app
 

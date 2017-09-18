@@ -44,7 +44,7 @@ class Weather(ResourceBase):
         """
         API_TOKEN = current_app.config.get('API_TOKEN')
 
-        # print("{} {}".format(request.args.get('where'), lookup))
+        print("{} {}".format(request.args.get('where'), lookup))
         where_param = request.args.get('where')
         if where_param != '' and where_param is not None:
             where = json.loads(where_param)
@@ -56,7 +56,7 @@ class Weather(ResourceBase):
                 'coordinates': where['coordinates'],
                 'time': request_time,
             }
-            print("{}".format(search))
+            # print("{}".format(search))
             weather_item = mongo_db[self.COLLECTION].find_one(search)
 
             if weather_item is None:
@@ -75,3 +75,4 @@ class Weather(ResourceBase):
                     '_updated': now.datetime
                 }
                 mongo_db[self.COLLECTION].insert(new_weather_item)
+                lookup['time'] = weather_item
