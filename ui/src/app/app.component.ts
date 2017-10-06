@@ -4,6 +4,7 @@ import { GeolocationService } from '../services/geolocation.service';
 import { Map } from 'mapbox-gl';
 import { IPosition } from '../core/position.interface';
 import { WeatherComponent } from '../weather/weather.component';
+import { DistanceComponent } from "../distance/distance.component";
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,9 @@ export class AppComponent {
 
   @ViewChild(WeatherComponent)
   private weatherDisplay: WeatherComponent;
+
+  @ViewChild(DistanceComponent)
+  private distanceDisplay: DistanceComponent;
 
   // Warning flag & message.
   warning: boolean;
@@ -62,6 +66,16 @@ export class AppComponent {
     }
   }
 
+  getDistanceDisplay() {
+    if (this.position) {
+      try {
+        this.distanceDisplay.displayDistance(this.position);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }
+
   getWeatherDisplay() {
     if (this.position) {
       try {
@@ -83,6 +97,7 @@ export class AppComponent {
       coords: location.coords,
     };
     this.getWeatherDisplay();
+    this.getDistanceDisplay();
     this.repositionMap();
   }
 
@@ -100,6 +115,7 @@ export class AppComponent {
     });
     map.on('style.load', () => {
       this.getWeatherDisplay();
+      this.getDistanceDisplay();
       this.repositionMap();
     });
     this.mapService.map = map;
@@ -123,6 +139,7 @@ export class AppComponent {
         })
         .then(() => {
           this.getWeatherDisplay();
+          this.getDistanceDisplay();
           this.repositionMap();
         })
         .catch((error: PositionError) => {

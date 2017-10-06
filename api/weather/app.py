@@ -10,6 +10,7 @@ from eve import Eve
 
 from weather.resources import DOMAIN
 from weather.models.weather import Weather
+from weather.distance import calc_distance
 
 tf = TimezoneFinder()
 
@@ -26,6 +27,7 @@ def app_init():
     SETTINGS['DEBUG'] = strtobool(os.environ.get('DEBUG', 'false'))
     SETTINGS['X_DOMAINS'] = '*'
     SETTINGS['X_HEADERS'] = ['Authorization', 'Content-type']
+    SETTINGS['MAPBOX_ACCESS_TOKEN'] = 'pk.eyJ1IjoibGljZW5zZTJlIiwiYSI6ImNqN250cW05dzFuZHEycXJyZmpleGlwMzUifQ.7KShHg4PfC1bM5qij9EzhA'
 
     app = Eve(settings=SETTINGS)
 
@@ -34,7 +36,18 @@ def app_init():
     @app.route('/tz')
     @cross_origin()
     def get_tz():
-        return jsonify(tz=tf.timezone_at(lng=float(request.args['lng']), lat=float(request.args['lat'])))
+        return jsonify(
+            tz=tf.timezone_at(lng=float(request.args['lng']),
+                              lat=float(request.args['lat'])))
+
+    @app.route('/distance')
+    @cross_origin()
+    def get_distance():
+        return jsonify(
+            calc_distance(org_lng=float(request.args['org_lng']),
+                            org_lat=float(request.args['org_lat']),
+                            dest_lng=float(request.args['dest_lng']),
+                            dest_lat=float(request.args['dest_lat'])))
 
     return app
 

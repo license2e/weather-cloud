@@ -23,4 +23,10 @@ export class ApiService {
 
     return this.http.get(url);
   }
+
+  distance(org_lat: number, org_lng: number, dest_lat: number, dest_lng: number) {
+    const url = `${environment.apiUri}/distance?org_lat=${org_lat}&org_lng=${org_lng}&dest_lat=${dest_lat}&dest_lng=${dest_lng}`;
+
+    return this.http.get(url);
+  }
 }

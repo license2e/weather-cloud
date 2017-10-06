@@ -62,7 +62,7 @@ export class WeatherComponent {
     return new Promise((resolve, reject) => {
       const coords = `${this.position.coords.latitude},${this.position.coords.longitude}`;
       const time = this.currentProcessingDate.format('X');
-      console.log(coords, time);
+      // console.log(coords, time);
       this.api.weather(coords, time)
         .subscribe((results:any) => {
           this.processResults(results)
