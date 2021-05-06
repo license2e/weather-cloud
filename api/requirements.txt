@@ -12,7 +12,7 @@ docutils==0.14
 Eve==0.7.4
 Events==0.2.2
 Flask==0.12
-Flask-Cors==3.0.3
+Flask-Cors==3.0.9
 Flask-PyMongo==0.5.1
 geopy==1.11.0
 gunicorn==19.7.1
